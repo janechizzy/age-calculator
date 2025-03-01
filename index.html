@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Frontend Mentor | Age calculator app</title>
+
+  <style>
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #f4f4f4; 
+      border: 2px solid hsl(0, 0%, 86%);
+      border-radius: 40px; 
+      width: fit-content;
+      margin: 30px auto;
+      border-bottom-right-radius: 150px;
+    }
+
+    @media only screen and (max-width: 475px) {
+      .main {
+        width: 100%;
+        padding: 0px 40px;
+      }
+    }
+
+    .box-container {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+    }
+
+    .box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .image-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 120%;
+      margin: 40px 0;
+      position: relative;
+    }
+
+    .line {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      height: 2px;
+      background-color: gray;
+    }
+
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: hsl(259, 100%, 65%);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .image {
+      width: 40px;
+      height: 40px;
+    }
+
+
+    @media (min-width: 768px) {
+      .image-wrapper {
+        justify-content: flex-end;
+        position: relative;
+        width: 100%;
+      }
+
+      .line {
+        width: calc(100% - 80px);
+        left: 0;
+        right: auto;
+        transform: translateY(-50%);
+      }
+
+      .image-container {
+        position: relative;
+        right: 0;
+      }
+    }
+
+    .box-h2 {
+      margin-left: 32px;
+      text-align: center;
+      font-family:Poppins, sans-serif;
+      font-size: 17px;
+    }
+
+    input {
+      width: 70px;
+      height: 30px;
+      text-align: center;
+      font-size: 16px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    p {
+      margin: 0;
+      font-weight: bold;
+    }
+    
+    .purple {
+      color: hsl(259, 100%, 65%);
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="main">
+  <div class="box-container">
+    <div class="box">
+      <h1>Day</h1>
+      <input type="number" id="day" placeholder="DD" min="1" max="31">
+      <p class="error" id="dayError"></p>
+    </div>
+    
+    <div class="box">
+      <h1>Month</h1>
+      <input type="number" id="month" placeholder="MM" min="1" max="12">
+      <p class="error" id="monthError"></p>
+    </div>
+
+    <div class="box">
+      <h1>Year</h1>
+      <input type="number" id="year" placeholder="YYYY" min="1900" max="2025">
+      <p class="error" id="yearError"></p>
+    </div>
+  </div>
+
+  <div class="image-wrapper">
+    <div class="line"></div> 
+    <div class="image-container" onclick="calculateAge()">
+      <img class="image" src="./assets/images/icon-arrow.svg" alt="icon-arrow">
+    </div>
+  </div>
+
+  <div class="box-h2">
+    <h2><span class="purple" id="years">--</span> years</h2>
+    <h2><span class="purple" id="months">--</span> months</h2>
+    <h2><span class="purple" id="days">--</span> days</h2>
+  </div>
+</div>
+
+<script>
+  function calculateAge() {
+    let day = document.getElementById("day").value;
+    let month = document.getElementById("month").value;
+    let year = document.getElementById("year").value;
+    
+    let dayError = document.getElementById("dayError");
+    let monthError = document.getElementById("monthError");
+    let yearError = document.getElementById("yearError");
+
+    dayError.textContent = "";
+    monthError.textContent = "";
+    yearError.textContent = "";
+
+    let today = new Date();
+    let birthDate = new Date(`${year}-${month}-${day}`);
+
+    if (!day || !month || !year || birthDate == "Invalid Date") {
+      if (!day || day < 1 || day > 31) dayError.textContent = "Invalid day";
+      if (!month || month < 1 || month > 12) monthError.textContent = "Invalid month";
+      if (!year || year > today.getFullYear()) yearError.textContent = "Invalid year";
+      return;
+    }
+
+    let ageYears = today.getFullYear() - birthDate.getFullYear();
+    let ageMonths = today.getMonth() - birthDate.getMonth();
+    let ageDays = today.getDate() - birthDate.getDate();
+
+    if (ageDays < 0) {
+      ageMonths--;
+      let lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      ageDays += lastMonth.getDate();
+    }
+    
+    if (ageMonths < 0) {
+      ageYears--;
+      ageMonths += 12;
+    }
+
+    document.getElementById("years").textContent = ageYears;
+    document.getElementById("months").textContent = ageMonths;
+    document.getElementById("days").textContent = ageDays;
+  }
+</script>
+
+</body>
+</html>
